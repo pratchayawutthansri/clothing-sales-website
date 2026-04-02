@@ -6,241 +6,394 @@ $heroImg  = "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?q=80&w
 $storyImg = "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=2000&auto=format&fit=crop";
 ?>
 
-<!-- About Page — Luxury Editorial -->
+<!-- About Page — Premium Streetwear Editorial -->
 <style>
-    /* ── ต่อจาก style.css เดิม prefix .ab- ทั้งหมด ── */
-    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;1,300;1,400&display=swap');
 
-    body { background: #faf9f7; }
+    .about-page { background: #faf9f7; }
 
-    /* HERO */
+    /* ── HERO ── */
     .ab-hero {
-        height: 100vh;
+        min-height: 92vh;
         display: grid;
         grid-template-columns: 1fr 1fr;
         overflow: hidden;
+        margin-top: -1px;
     }
     .ab-hero-left {
         display: flex;
         flex-direction: column;
-        justify-content: flex-end;
-        padding: 80px 72px;
+        justify-content: center;
+        padding: 120px 72px 80px;
         background: #faf9f7;
     }
     .ab-eyebrow {
-        font-family: var(--font-mono);
-        font-size: 0.65rem;
-        letter-spacing: 0.3em;
+        font-family: 'Outfit', monospace;
+        font-size: 0.7rem;
+        letter-spacing: 0.35em;
         text-transform: uppercase;
-        color: var(--accent-color);
+        color: #999;
         margin-bottom: 28px;
         opacity: 0;
-        animation: slideUp 0.7s ease forwards 0.2s;
+        animation: abSlideUp 0.7s ease forwards 0.2s;
     }
     .ab-hero-left h1 {
-        font-family: 'Cormorant Garamond', serif !important;
-        font-size: clamp(3.2rem, 5.5vw, 5.5rem) !important;
-        font-weight: 300 !important;
-        font-style: italic !important;
-        line-height: 1.08 !important;
-        letter-spacing: -0.02em !important;
-        color: var(--text-color) !important;
-        text-transform: none !important;
+        font-family: 'Outfit', sans-serif !important;
+        font-size: clamp(3.5rem, 6vw, 6rem) !important;
+        font-weight: 800 !important;
+        font-style: normal !important;
+        line-height: 0.95 !important;
+        letter-spacing: -0.04em !important;
+        color: #0a0a0a !important;
+        text-transform: uppercase !important;
         margin-bottom: 36px;
         opacity: 0;
-        animation: slideUp 0.8s ease forwards 0.35s;
+        animation: abSlideUp 0.8s ease forwards 0.35s;
     }
-    .ab-hero-left p {
-        font-size: 0.95rem;
+    .ab-hero-sub {
+        font-size: 1rem;
         font-weight: 300;
-        color: var(--accent-color);
+        color: #666;
         line-height: 1.85;
-        max-width: 360px;
+        max-width: 400px;
+        margin-bottom: 48px;
         opacity: 0;
-        animation: slideUp 0.8s ease forwards 0.5s;
+        animation: abSlideUp 0.8s ease forwards 0.5s;
     }
-    .ab-hero-right { overflow: hidden; }
+    .ab-hero-cta {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        width: fit-content;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: #0a0a0a;
+        text-decoration: none;
+        padding: 16px 36px;
+        border: 2px solid #0a0a0a;
+        border-radius: 0;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        opacity: 0;
+        animation: abSlideUp 0.8s ease forwards 0.65s;
+    }
+    .ab-hero-cta:hover {
+        background: #0a0a0a;
+        color: #fff;
+    }
+    .ab-hero-cta svg {
+        transition: transform 0.3s;
+    }
+    .ab-hero-cta:hover svg {
+        transform: translateX(4px);
+    }
+    .ab-hero-right {
+        overflow: hidden;
+        position: relative;
+    }
     .ab-hero-right img {
         width: 100%;
         height: 100%;
         object-fit: cover;
         object-position: center top;
-        filter: saturate(0.8);
-        transition: transform 8s ease;
+        filter: saturate(0.85);
+        transition: transform 6s ease;
     }
     .ab-hero:hover .ab-hero-right img { transform: scale(1.04); }
 
-    /* STORY */
+    /* ── STATS TICKER ── */
+    .ab-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        border-top: 1px solid #e8e4dd;
+        border-bottom: 1px solid #e8e4dd;
+        background: #fff;
+    }
+    .ab-stat {
+        padding: 48px 40px;
+        text-align: center;
+        border-right: 1px solid #e8e4dd;
+        transition: background 0.3s ease;
+    }
+    .ab-stat:last-child { border-right: none; }
+    .ab-stat:hover { background: #faf9f7; }
+    .ab-stat-num {
+        font-family: 'Kanit', sans-serif;
+        font-size: 2.8rem;
+        font-weight: 300;
+        font-style: italic;
+        color: #0a0a0a;
+        line-height: 1;
+        margin-bottom: 8px;
+    }
+    .ab-stat-label {
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.7rem;
+        font-weight: 500;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #999;
+    }
+
+    /* ── STORY ── */
     .ab-story {
-        padding: 160px 72px;
+        padding: 120px 72px;
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 120px;
+        gap: 80px;
         align-items: center;
-        border-top: 1px solid #ede9e1;
         background: #faf9f7;
     }
     .ab-label {
-        font-family: var(--font-mono);
+        font-family: 'Outfit', monospace;
         font-size: 0.65rem;
-        letter-spacing: 0.3em;
+        letter-spacing: 0.35em;
         text-transform: uppercase;
-        color: var(--accent-color);
-        margin-bottom: 32px;
+        color: #b8a080;
+        margin-bottom: 28px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+    .ab-label::before {
+        content: '';
+        width: 40px;
+        height: 1px;
+        background: #b8a080;
     }
     .ab-story h2 {
-        font-family: 'Cormorant Garamond', serif !important;
-        font-size: clamp(2.2rem, 4vw, 3.8rem) !important;
+        font-family: 'Kanit', sans-serif !important;
+        font-size: clamp(2rem, 3.5vw, 3.2rem) !important;
         font-weight: 300 !important;
         font-style: italic !important;
         line-height: 1.15 !important;
         letter-spacing: -0.01em !important;
         text-transform: none !important;
-        color: var(--text-color) !important;
-        margin-bottom: 40px;
+        color: #0a0a0a !important;
+        margin-bottom: 32px;
     }
     .ab-story p {
         font-size: 0.95rem;
         font-weight: 300;
-        color: #666;
+        color: #555;
         line-height: 1.95;
-        margin-bottom: 20px;
+        margin-bottom: 18px;
     }
-    .ab-img-wrap { overflow: hidden; }
+    .ab-img-wrap {
+        overflow: hidden;
+        border-radius: 2px;
+        position: relative;
+    }
+    .ab-img-wrap::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.08) 100%);
+        pointer-events: none;
+    }
     .ab-img-wrap img {
         width: 100%;
         aspect-ratio: 4/5;
         object-fit: cover;
-        filter: saturate(0.8) contrast(1.05);
-        transition: transform 0.8s ease;
+        filter: saturate(0.85) contrast(1.03);
+        transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .ab-img-wrap:hover img { transform: scale(1.03); }
+    .ab-img-wrap:hover img { transform: scale(1.04); }
 
-    /* VALUES */
+    /* ── VALUES ── */
     .ab-values {
-        padding: 160px 72px;
-        background: #faf9f7;
-        border-top: 1px solid #ede9e1;
+        padding: 120px 72px;
+        background: #0a0a0a;
+        color: #fff;
     }
     .ab-values-top {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        gap: 80px;
+        gap: 60px;
         align-items: end;
-        margin-bottom: 100px;
+        margin-bottom: 80px;
     }
     .ab-values-top h2 {
-        font-family: 'Cormorant Garamond', serif !important;
-        font-size: clamp(2.5rem, 5vw, 5rem) !important;
+        font-family: 'Kanit', sans-serif !important;
+        font-size: clamp(2.2rem, 4.5vw, 4.5rem) !important;
         font-weight: 300 !important;
         font-style: italic !important;
         line-height: 1.05 !important;
         text-transform: none !important;
-        color: var(--text-color) !important;
+        color: #fff !important;
     }
     .ab-values-top p {
         font-size: 0.95rem;
         font-weight: 300;
-        color: #888;
+        color: rgba(255,255,255,0.5);
         line-height: 1.9;
     }
     .ab-values-list {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        border-top: 1px solid #ede9e1;
+        border-top: 1px solid rgba(255,255,255,0.12);
     }
     .ab-val {
-        padding: 60px 48px 60px 0;
-        border-right: 1px solid #ede9e1;
-        transition: opacity 0.3s ease;
+        padding: 56px 48px 56px 0;
+        border-right: 1px solid rgba(255,255,255,0.08);
+        transition: opacity 0.4s ease;
     }
     .ab-val:nth-child(2) { padding-left: 48px; }
-    .ab-val:last-child   { border-right: none; padding-right: 0; padding-left: 48px; }
-    .ab-values-list:hover .ab-val       { opacity: 0.35; }
+    .ab-val:last-child {
+        border-right: none;
+        padding-right: 0;
+        padding-left: 48px;
+    }
+    .ab-values-list:hover .ab-val       { opacity: 0.3; }
     .ab-values-list:hover .ab-val:hover { opacity: 1; }
     .ab-val-num {
-        font-family: var(--font-mono);
+        font-family: 'Outfit', monospace;
         font-size: 0.65rem;
-        letter-spacing: 0.2em;
-        color: #ccc;
+        letter-spacing: 0.25em;
+        color: rgba(255,255,255,0.25);
         margin-bottom: 32px;
     }
     .ab-val h3 {
-        font-family: 'Cormorant Garamond', serif !important;
-        font-size: 1.6rem !important;
+        font-family: 'Kanit', sans-serif !important;
+        font-size: 1.55rem !important;
         font-weight: 400 !important;
         font-style: italic !important;
         text-transform: none !important;
-        color: var(--text-color) !important;
-        margin-bottom: 16px;
+        color: #fff !important;
+        margin-bottom: 14px;
     }
     .ab-val p {
         font-size: 0.85rem;
         font-weight: 300;
-        color: #888;
+        color: rgba(255,255,255,0.45);
         line-height: 1.85;
     }
 
-    /* MISSION */
+    /* ── MISSION / CTA ── */
     .ab-mission {
-        padding: 180px 72px;
+        padding: 140px 72px;
         background: #faf9f7;
-        border-top: 1px solid #ede9e1;
         text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+    .ab-mission::before {
+        content: 'XIVEX';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-family: 'Outfit', sans-serif;
+        font-size: 18vw;
+        font-weight: 900;
+        color: rgba(0,0,0,0.025);
+        pointer-events: none;
+        white-space: nowrap;
     }
     .ab-mission blockquote {
-        font-family: 'Cormorant Garamond', serif;
-        font-size: clamp(2rem, 5vw, 4.5rem);
+        font-family: 'Kanit', sans-serif;
+        font-size: clamp(1.8rem, 4.5vw, 4rem);
         font-weight: 300;
         font-style: italic;
-        line-height: 1.2;
+        line-height: 1.25;
         letter-spacing: -0.01em;
-        color: var(--text-color);
-        max-width: 900px;
-        margin: 0 auto 64px;
+        color: #0a0a0a;
+        max-width: 850px;
+        margin: 0 auto 56px;
+        position: relative;
+        z-index: 1;
     }
     .ab-cta-link {
-        font-family: var(--font-mono);
-        font-size: 0.7rem;
-        letter-spacing: 0.25em;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'Outfit', sans-serif;
+        font-size: 0.8rem;
+        font-weight: 600;
+        letter-spacing: 0.2em;
         text-transform: uppercase;
-        color: var(--text-color);
-        border-bottom: 1px solid var(--text-color);
-        padding-bottom: 4px;
-        transition: opacity 0.3s ease;
+        color: #fff;
+        text-decoration: none;
+        background: #0a0a0a;
+        padding: 18px 48px;
+        border-radius: 0;
+        transition: all 0.4s ease;
+        position: relative;
+        z-index: 1;
     }
-    .ab-cta-link:hover { opacity: 0.4; }
+    .ab-cta-link:hover {
+        background: #333;
+        transform: translateY(-2px);
+        box-shadow: 0 12px 32px rgba(0,0,0,0.15);
+    }
 
-    /* SCROLL REVEAL */
+    /* ── SCROLL REVEAL ── */
     .ab-r {
         opacity: 0;
-        transform: translateY(40px);
-        transition: opacity 0.9s cubic-bezier(0.16,1,0.3,1),
-                    transform 0.9s cubic-bezier(0.16,1,0.3,1);
+        transform: translateY(35px);
+        transition: opacity 0.8s cubic-bezier(0.16,1,0.3,1),
+                    transform 0.8s cubic-bezier(0.16,1,0.3,1);
     }
     .ab-r.on { opacity: 1; transform: none; }
     .ab-d1 { transition-delay: 0.1s; }
     .ab-d2 { transition-delay: 0.2s; }
     .ab-d3 { transition-delay: 0.3s; }
+    .ab-d4 { transition-delay: 0.4s; }
 
-    /* RESPONSIVE */
+    /* ── KEYFRAMES ── */
+    @keyframes abSlideUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to   { opacity: 1; transform: none; }
+    }
+
+    /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
-        .ab-hero        { grid-template-columns: 1fr; height: auto; }
-        .ab-hero-right  { height: 65vw; }
-        .ab-hero-left   { padding: 60px 30px; }
-        .ab-story       { grid-template-columns: 1fr; gap: 60px; padding: 100px 30px; }
-        .ab-values      { padding: 100px 30px; }
-        .ab-values-top  { grid-template-columns: 1fr; gap: 32px; margin-bottom: 60px; }
+        .ab-hero {
+            grid-template-columns: 1fr;
+            min-height: auto;
+        }
+        .ab-hero-left {
+            padding: 100px 28px 60px;
+            order: 2;
+        }
+        .ab-hero-right {
+            height: 55vw;
+            min-height: 280px;
+            order: 1;
+        }
+        .ab-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        .ab-stat {
+            padding: 32px 24px;
+        }
+        .ab-stat:nth-child(2) { border-right: none; }
+        .ab-stat:nth-child(3),
+        .ab-stat:nth-child(4) { border-top: 1px solid #e8e4dd; }
+        .ab-stat-num { font-size: 2.2rem; }
+        .ab-story {
+            grid-template-columns: 1fr;
+            gap: 48px;
+            padding: 80px 28px;
+        }
+        .ab-values { padding: 80px 28px; }
+        .ab-values-top {
+            grid-template-columns: 1fr;
+            gap: 24px;
+            margin-bottom: 48px;
+        }
         .ab-values-list { grid-template-columns: 1fr; }
         .ab-val,
         .ab-val:nth-child(2),
         .ab-val:last-child {
-            padding: 48px 0;
+            padding: 40px 0;
             border-right: none;
-            border-bottom: 1px solid #ede9e1;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
         }
         .ab-val:last-child { border-bottom: none; }
-        .ab-mission { padding: 100px 30px; }
+        .ab-mission { padding: 80px 28px; }
+        .ab-mission blockquote { font-size: clamp(1.5rem, 6vw, 2.5rem); }
     }
 </style>
 
@@ -251,10 +404,34 @@ $storyImg = "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=20
         <div class="ab-hero-left">
             <p class="ab-eyebrow">2025 — BANGKOK</p>
             <h1><?= __('abt_hero_h1') ?></h1>
-            <p><?= __('abt_hero_p') ?></p>
+            <p class="ab-hero-sub"><?= __('abt_hero_p') ?></p>
+            <a href="shop.php" class="ab-hero-cta">
+                Shop Collection
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+            </a>
         </div>
         <div class="ab-hero-right">
-            <img src="<?= $heroImg ?>" alt="XIVEX">
+            <img src="<?= $heroImg ?>" alt="XIVEX Streetwear">
+        </div>
+    </section>
+
+    <!-- ── STATS TICKER ── -->
+    <section class="ab-stats">
+        <div class="ab-stat ab-r">
+            <div class="ab-stat-num">6+</div>
+            <div class="ab-stat-label"><?= __('abt_stat_collections') ?? 'Collections' ?></div>
+        </div>
+        <div class="ab-stat ab-r ab-d1">
+            <div class="ab-stat-num">100%</div>
+            <div class="ab-stat-label"><?= __('abt_stat_cotton') ?? 'Premium Cotton' ?></div>
+        </div>
+        <div class="ab-stat ab-r ab-d2">
+            <div class="ab-stat-num">BKK</div>
+            <div class="ab-stat-label"><?= __('abt_stat_designed') ?? 'Designed In' ?></div>
+        </div>
+        <div class="ab-stat ab-r ab-d3">
+            <div class="ab-stat-num">∞</div>
+            <div class="ab-stat-label"><?= __('abt_stat_style') ?? 'Unique Styles' ?></div>
         </div>
     </section>
     
@@ -271,7 +448,7 @@ $storyImg = "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=20
         </div>
     </section>
 
-    <!-- ── VALUES ── -->
+    <!-- ── VALUES (Dark Section) ── -->
     <section class="ab-values">
         <div class="ab-values-top ab-r">
             <h2><?= __('abt_values_h2') ?></h2>
@@ -299,7 +476,10 @@ $storyImg = "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=20
     <!-- ── MISSION / CTA ── -->
     <section class="ab-mission ab-r">
         <blockquote><?= __('abt_cta_h2') ?></blockquote>
-        <a href="shop.php" class="ab-cta-link"><?= __('abt_cta_btn') ?></a>
+        <a href="shop.php" class="ab-cta-link">
+            <?= __('abt_cta_btn') ?>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </a>
     </section>
 
 </div>
@@ -307,7 +487,7 @@ $storyImg = "https://images.unsplash.com/photo-1556905055-8f358a7a47b2?q=80&w=20
 <script>
     const io = new IntersectionObserver(
         entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('on'); }),
-        { threshold: 0.12 }
+        { threshold: 0.1 }
     );
     document.querySelectorAll('.ab-r').forEach(el => io.observe(el));
 </script>

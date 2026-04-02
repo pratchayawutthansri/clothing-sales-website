@@ -10,7 +10,7 @@ $featured_products = $stmt->fetchAll();
 <!-- Custom Luxury Styles -->
 <style>
     /* Typography Upgrade */
-    h1, h2, h3 { font-family: 'Playfair Display', serif; }
+    h1, h2, h3 { font-family: 'Outfit', sans-serif; }
     
     /* Hero Refinement - Hybrid Cartoon Luxury */
     .hero {
@@ -142,9 +142,9 @@ $featured_products = $stmt->fetchAll();
 <section class="featured" style="padding: 100px 0;">
     <div class="container">
         <div class="section-header" style="text-align: center; margin-bottom: 40px;">
-            <h2 class="section-title" style="font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 10px;"><?= __('new_arrivals') ?></h2>
+            <h2 class="section-title" style="font-family: 'Outfit', sans-serif; font-size: 3rem; font-weight: 700; margin-bottom: 10px;"><?= __('new_arrivals') ?></h2>
             <div style="margin-top: 10px;">
-                <a href="shop.php" style="font-family: 'Playfair Display', serif; font-style: italic; font-size: 1.2rem; color: #666; text-decoration: none; border-bottom: 1px solid #ccc;"><?= __('view_all_products') ?></a>
+                <a href="shop.php" style="font-family: 'Outfit', sans-serif; font-weight: 400; font-size: 1rem; color: #666; text-decoration: none; border-bottom: 1px solid #ccc;"><?= __('view_all_products') ?></a>
             </div>
         </div>
 

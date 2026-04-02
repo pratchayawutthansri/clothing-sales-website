@@ -287,7 +287,7 @@ include 'includes/header.php';
     .notif-time {
         font-size: 0.78rem;
         color: #94a3b8;
-        font-family: 'Inter', sans-serif;
+        font-family: 'Outfit', sans-serif;
         display: flex;
         align-items: center;
         gap: 5px;

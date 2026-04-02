@@ -8,9 +8,9 @@
     --accent-color: #9c9c9c;
     --text-color: #111111;
     --white: #ffffff;
-    --font-heading: 'Bebas Neue', sans-serif;
-    --font-body: 'Inter', sans-serif;
-    --font-mono: 'Space Mono', monospace;
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Kanit', 'Outfit', sans-serif;
+    --font-mono: 'Outfit', monospace;
     --primary-street: #0a0a0a;
     --accent-gold: #c9a84c;
     --off-white: #f0f0f0;
@@ -107,10 +107,10 @@ h1,
 h2,
 h3,
 h4 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Outfit', sans-serif;
     font-weight: 700;
-    letter-spacing: -0.01em;
-    text-transform: none; /* Premium brands often use sentence case for better legibility */
+    letter-spacing: -0.02em;
+    text-transform: none;
 }
 
 .container {

@@ -33,6 +33,10 @@ return [
     'abt_values_sub' => 'Every decision at XIVEX is measured against the same principle — if it is not good enough for us, it is not good enough for you.',
     'abt_cta_h2' => 'Ready to define your style?',
     'abt_cta_btn' => 'Shop Collection',
+    'abt_stat_collections' => 'Collections',
+    'abt_stat_cotton' => 'Premium Cotton',
+    'abt_stat_designed' => 'Designed In',
+    'abt_stat_style' => 'Unique Styles',
 
     // Auth Pages
     'login_title' => 'Welcome Back',

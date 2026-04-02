@@ -33,6 +33,15 @@ if ($action === 'add') {
                 redirect('shop.php'); // Invalid variant-product pair
             }
         } else {
+            // GUARD: Prevent "Variant Bypass" (Business Logic Vulnerability)
+            // If the product has variants in DB, but variant_id=0 was passed, it's an exploit attempt.
+            $stmtRequireVariant = $pdo->prepare("SELECT id FROM product_variants WHERE product_id = ? LIMIT 1");
+            $stmtRequireVariant->execute([$product_id]);
+            if ($stmtRequireVariant->fetch()) {
+                // Security Check Failed: Product REQUIRES a variant selection. Deny request.
+                redirect('shop.php'); 
+            }
+
             // Product WITHOUT variant (variant_id=0) — verify product exists
             $stmtCheck = $pdo->prepare("SELECT id FROM products WHERE id = ? AND is_visible = 1");
             $stmtCheck->execute([$product_id]);

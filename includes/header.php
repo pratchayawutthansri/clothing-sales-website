@@ -48,7 +48,7 @@ if (isset($_SESSION['user_id'])) {
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Kanit:wght@300;400;500;600&family=Outfit:wght@400;600;800&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
     <style>
@@ -59,7 +59,7 @@ if (isset($_SESSION['user_id'])) {
             font-size: 1rem !important;
         }
         .logo {
-            font-family: 'Playfair Display', serif !important;
+            font-family: 'Outfit', sans-serif !important;
             font-weight: 900 !important;
         }
         .lang-switch {
@@ -127,7 +127,7 @@ if (isset($_SESSION['user_id'])) {
             justify-content: center;
             border: 2px solid #fff;
             line-height: 1;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Outfit', sans-serif;
         }
         .notif-badge.has-notif {
             animation: notifPulse 2s ease-in-out infinite;
@@ -234,7 +234,7 @@ if (isset($_SESSION['user_id'])) {
         .notif-dd-time {
             font-size: 0.72rem;
             color: #94a3b8;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Outfit', sans-serif;
         }
         .notif-dd-dot {
             width: 8px;

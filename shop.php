@@ -175,7 +175,7 @@ $products = $stmt->fetchAll();
 <?php else: ?>
     <div class="page-header" style="text-align: center; padding: 60px 0;">
         <div class="container">
-            <h1 class="page-title" style="font-family: 'Playfair Display', serif; font-size: 3rem; margin-bottom: 10px;">
+            <h1 class="page-title" style="font-family: 'Outfit', sans-serif; font-size: 3rem; font-weight: 700; margin-bottom: 10px;">
                 <?= $category ? htmlspecialchars($category) : __('shop_all_products_title') ?>
             </h1>
             <p style="color: #666; font-family: 'Kanit', sans-serif; font-weight: 300;"><?= __('shop_subtitle') ?></p>

@@ -14,7 +14,7 @@ require_once 'includes/header.php';
         color: white;
     }
     .contact-title {
-        font-family: 'Playfair Display', serif;
+        font-family: 'Outfit', sans-serif;
         font-size: 4rem;
         margin-bottom: 10px;
     }
@@ -55,7 +55,7 @@ require_once 'includes/header.php';
         font-weight: 700;
     }
     .info-value {
-        font-family: 'Playfair Display', serif;
+        font-family: 'Outfit', sans-serif;
         font-size: 1.5rem;
     }
     .social-links a {

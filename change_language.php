@@ -12,7 +12,9 @@ $return_url = $_SERVER['HTTP_REFERER'] ?? 'index.php';
 // Security: Validate that the URL belongs to this server (prevent Open Redirect)
 $parsed_url = parse_url($return_url);
 $serverHost = $_SERVER['HTTP_HOST'] ?? 'localhost';
-if (isset($parsed_url['host']) && $parsed_url['host'] !== $serverHost) {
+$hostOnly = explode(':', $serverHost)[0];
+
+if (isset($parsed_url['host']) && $parsed_url['host'] !== $hostOnly) {
     $return_url = 'index.php';
 } else {
     // Sanitize the URL to remove any trailing ?lang= parameters from the old implementation

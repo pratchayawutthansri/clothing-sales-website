@@ -1,0 +1,41 @@
+services:
+  app:
+    build: .
+    container_name: xivex_app
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    environment:
+      - DB_HOST=db
+      - DB_NAME=xivex_store
+      - DB_USER=xivex_user
+      - DB_PASS=xivex_password
+      - SITE_URL=http://localhost:8080/
+    depends_on:
+      - db
+    networks:
+      - xivex_network
+
+  db:
+    image: mysql:8.0
+    container_name: xivex_db
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci --init-connect='SET NAMES utf8mb4'
+    restart: always
+    environment:
+      MYSQL_DATABASE: xivex_store
+      MYSQL_USER: xivex_user
+      MYSQL_PASSWORD: xivex_password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./database.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - xivex_network
+
+networks:
+  xivex_network:
+    driver: bridge
+
+volumes:
+  db_data:
