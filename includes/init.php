@@ -23,6 +23,9 @@ ob_start();
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/functions.php';
 
+// Load Models (Phase 2 MVC-Lite Implementation)
+require_once __DIR__ . '/models/Product.php';
+
 // Set Timezone (Optional but good practice)
 date_default_timezone_set('Asia/Bangkok');
 ?>
