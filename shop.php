@@ -2,25 +2,9 @@
 require_once 'includes/init.php';
 include 'includes/header.php';
 
-// Input Validation - Prevent SQL Injection
+// Input Validation
 $category = trim($_GET['cat'] ?? '');
 $isNew = isset($_GET['new']);
-$whereClause = "";
-$params = [];
-
-// Whitelist valid categories to prevent SQL injection
-$validCategories = ['Tops', 'Bottoms', 'Outerwear', 'Accessories'];
-
-if ($category && in_array($category, $validCategories)) {
-    $whereClause = "WHERE category = ? AND is_visible = 1";
-    $params[] = $category;
-} elseif ($category) {
-    // Invalid category - redirect to safe page
-    redirect('shop.php');
-} else {
-    $whereClause = "WHERE is_visible = 1";
-}
-
 // Categories for Filter (Matched with DB)
 $categories = [
     'Tops' => 'Tops', 
@@ -29,11 +13,7 @@ $categories = [
     'Accessories' => 'Accessories'
 ];
 
-// Logic: If 'new' is requested, we might want to limit to recent items or specific categories.
-// For now, we keep the ORDER BY id DESC which naturally shows new items first.
-$stmt = $pdo->prepare("SELECT * FROM products $whereClause ORDER BY id DESC");
-$stmt->execute($params);
-$products = $stmt->fetchAll();
+$products = Product::getAll($category);
 ?>
 
 <style>
