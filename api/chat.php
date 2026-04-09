@@ -1,6 +1,9 @@
 <?php
 // api/chat.php
 header('Content-Type: application/json');
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('Pragma: no-cache');
 require_once '../includes/config.php';
 require_once '../includes/db.php';
 
@@ -59,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $targetSession = $input['target_session'];
     }
 
-    $stmt = $pdo->prepare("INSERT INTO chat_messages (session_id, message, is_admin, created_at) VALUES (?, ?, ?, NOW())");
+    $stmt = $pdo->prepare("INSERT INTO chat_messages (session_id, message, is_admin) VALUES (?, ?, ?)");
     $stmt->execute([$targetSession, $message, $isAdmin ? 1 : 0]);
 
     echo json_encode(['status' => 'success']);

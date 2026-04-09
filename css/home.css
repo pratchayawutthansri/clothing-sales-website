@@ -1,12 +1,6 @@
     /* Typography & Core */
     :root {
-        --text-dark: #050505;
-        --text-light: #fdfdfd;
         --accent: #ff2a2a;
-    }
-    
-    body {
-        background-color: var(--text-light); /* Off-white luxury */
     }
 
     /* ─── Cinematic Hero ─── */
@@ -38,7 +32,7 @@
         position: relative;
         z-index: 10;
         text-align: center;
-        color: var(--text-light);
+        color: #ffffff;
         padding: 0 20px;
         display: flex;
         flex-direction: column;
@@ -133,14 +127,14 @@
     /* ─── Featured Products Overhaul ─── */
     .featured {
         padding: 140px 0;
-        background-color: var(--text-light);
+        background-color: var(--bg-primary);
     }
     .section-title {
         font-family: 'Kanit', 'Outfit', sans-serif;
         font-size: clamp(2.5rem, 5vw, 4rem);
         font-weight: 700;
         letter-spacing: 0px;
-        color: var(--text-dark);
+        color: var(--text-primary);
         margin-bottom: 20px;
         line-height: 1;
     }
@@ -149,8 +143,8 @@
     .btn-outline-dark {
         display: inline-flex;
         padding: 12px 30px;
-        border: 1px solid #000;
-        color: #000;
+        border: 1px solid var(--text-primary);
+        color: var(--text-primary);
         font-family: 'Outfit', sans-serif;
         font-weight: 600;
         font-size: 0.85rem;
@@ -161,8 +155,8 @@
         border-radius: 50px;
     }
     .btn-outline-dark:hover {
-        background: #000;
-        color: #fff;
+        background: var(--text-primary);
+        color: var(--bg-primary);
     }
 
     /* ─── Promo Banner (Avant-Garde) ─── */

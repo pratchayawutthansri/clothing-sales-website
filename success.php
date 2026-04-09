@@ -26,8 +26,9 @@ if ($order_id > 0) {
     
     // Check ownership for logged-in users - with additional email verification
     if (!$allowed && isset($_SESSION['user_id'])) {
-        $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM orders WHERE id = ? AND user_id = ? AND created_at > DATE_SUB(NOW(), INTERVAL 30 DAY)");
-        $stmtCheck->execute([$order_id, $_SESSION['user_id']]);
+        $thirtyDaysAgo = date('Y-m-d H:i:s', strtotime('-30 days'));
+        $stmtCheck = $pdo->prepare("SELECT COUNT(*) FROM orders WHERE id = ? AND user_id = ? AND order_date > ?");
+        $stmtCheck->execute([$order_id, $_SESSION['user_id'], $thirtyDaysAgo]);
         if ($stmtCheck->fetchColumn() > 0) {
             $allowed = true;
             

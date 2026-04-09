@@ -23,7 +23,7 @@ $lowStockCount = $stmtLowStock->fetchColumn();
 
 // 4. Monthly Sales (Current Month)
 $currentMonth = date('Y-m');
-$stmtMonthly = $pdo->prepare("SELECT SUM(total_price) FROM orders WHERE status IN ('paid', 'shipped', 'completed') AND DATE_FORMAT(order_date, '%Y-%m') = ?");
+$stmtMonthly = $pdo->prepare("SELECT SUM(total_price) FROM orders WHERE status IN ('paid', 'shipped', 'completed') AND strftime('%Y-%m', order_date) = ?");
 $stmtMonthly->execute([$currentMonth]);
 $monthlySales = $stmtMonthly->fetchColumn() ?: 0;
 
@@ -33,10 +33,10 @@ $sales = [];
 $startMonth = date('Y-m', strtotime("-5 months"));
 
 $stmtChart = $pdo->prepare("
-    SELECT DATE_FORMAT(order_date, '%Y-%m') AS month, SUM(total_price) AS total
+    SELECT strftime('%Y-%m', order_date) AS month, SUM(total_price) AS total
     FROM orders
     WHERE status IN ('paid', 'shipped', 'completed')
-      AND DATE_FORMAT(order_date, '%Y-%m') >= ?
+      AND strftime('%Y-%m', order_date) >= ?
     GROUP BY month
     ORDER BY month ASC
 ");

@@ -28,6 +28,7 @@ if (empty($name) || $base_price <= 0) {
 
 try {
     $pdo->beginTransaction();
+    $fileToDelete = null;
 
     // 1. Update Product Info
     $sql = "UPDATE products SET name = ?, category = ?, description = ?, base_price = ?, badge = ?, is_visible = ? WHERE id = ?";
@@ -61,9 +62,9 @@ try {
         $dbPath = 'images/' . $newName; // Relative to web root
         
         if (move_uploaded_file($_FILES['image']['tmp_name'], $dest)) {
-            // Delete old file
+            // Track old file for deletion after commit
             if ($oldImg && file_exists("../" . $oldImg) && $oldImg !== 'images/placeholder.jpg') {
-                unlink("../" . $oldImg);
+                $fileToDelete = "../" . $oldImg;
             }
             
             // Update DB with new image
@@ -76,7 +77,8 @@ try {
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
 
-    // 3. Update Existing Variants
+    // 3. Update Existing Variants and Delete Removed Ones
+    $submittedVariantIds = [];
     if (isset($_POST['existing_variant_ids'])) {
         $ids = $_POST['existing_variant_ids'];
         $sizes = $_POST['existing_sizes'];
@@ -86,14 +88,27 @@ try {
         $stmtUpdateVar = $pdo->prepare("UPDATE product_variants SET size = ?, price = ?, stock = ? WHERE id = ? AND product_id = ?");
         
         for ($i = 0; $i < count($ids); $i++) {
+            $currentId = (int)$ids[$i];
+            $submittedVariantIds[] = $currentId;
             $stmtUpdateVar->execute([
-                strtoupper($sizes[$i]),
+                strtoupper(isset($sizes[$i]) ? $sizes[$i] : ''),
                 (float)($prices[$i] ?? 0),
                 max(0, (int)($stocks[$i] ?? 0)),
-                (int)$ids[$i],
+                $currentId,
                 $id
             ]);
         }
+    }
+
+    // Delete variants that were removed from the UI
+    if (empty($submittedVariantIds)) {
+        $stmtDeleteVar = $pdo->prepare("DELETE FROM product_variants WHERE product_id = ?");
+        $stmtDeleteVar->execute([$id]);
+    } else {
+        $placeholders = implode(',', array_fill(0, count($submittedVariantIds), '?'));
+        $stmtDeleteVar = $pdo->prepare("DELETE FROM product_variants WHERE product_id = ? AND id NOT IN ($placeholders)");
+        $paramsDelete = array_merge([$id], $submittedVariantIds);
+        $stmtDeleteVar->execute($paramsDelete);
     }
 
     // 4. Insert New Variants
@@ -121,6 +136,12 @@ try {
     }
 
     $pdo->commit();
+    
+    // Execute pending file deletion
+    if ($fileToDelete && file_exists($fileToDelete)) {
+        unlink($fileToDelete);
+    }
+    
     header("Location: products.php?success=Product updated successfully");
     exit;
 

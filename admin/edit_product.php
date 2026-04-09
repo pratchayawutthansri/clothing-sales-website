@@ -135,6 +135,20 @@ $variants = $stmtV->fetchAll();
         </a>
     </div>
     
+    <?php if (isset($_GET['error'])): ?>
+    <div style="background: #fee2e2; border: 1px solid #fecaca; color: #ef4444; padding: 16px; border-radius: 8px; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; font-weight: 500;">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <?= htmlspecialchars($_GET['error']) ?>
+    </div>
+    <?php endif; ?>
+    
+    <?php if (isset($_GET['success'])): ?>
+    <div style="background: #d1fae5; border: 1px solid #a7f3d0; color: #059669; padding: 16px; border-radius: 8px; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; font-weight: 500;">
+        <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <?= htmlspecialchars($_GET['success']) ?>
+    </div>
+    <?php endif; ?>
+    
     <form action="update_product_logic.php" method="POST" enctype="multipart/form-data">
         <input type="hidden" name="csrf_token" value="<?= $_SESSION['admin_csrf_token'] ?? '' ?>">
         <input type="hidden" name="id" value="<?= $product['id'] ?>">
@@ -190,9 +204,9 @@ $variants = $stmtV->fetchAll();
                                 <label>Stock (จำนวน)</label>
                                 <input type="number" name="existing_stocks[]" value="<?= $v['stock'] ?>" required min="0" class="modern-input">
                             </div>
-                            <div style="margin-bottom: 8px;">
-                                <span style="font-size: 0.8rem; color: #10b981; font-weight:600;">ACTIVE</span>
-                            </div>
+                            <button type="button" class="btn-modern btn-danger-icon" onclick="this.parentElement.remove()" style="width: auto; padding: 10px; margin-bottom: 2px;" title="ลบตัวเลือกนี้">
+                                <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
                         </div>
                         <?php endforeach; ?>
                     </div>

@@ -17,16 +17,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         die("Security Error: Invalid CSRF Token");
     }
 
-    // Brute-Force Protection: Max 5 attempts per 15 minutes
-    $maxAttempts = 5;
-    $lockoutTime = 900; // 15 minutes
+    // Brute-Force Protection (3 attempts, 5 minutes lockout)
+    $maxAttempts = 3;
+    $lockoutTime = 5 * 60; // 5 minutes in seconds
     if (!isset($_SESSION['admin_login_attempts'])) $_SESSION['admin_login_attempts'] = [];
-    // Remove attempts older than lockout window
-    $_SESSION['admin_login_attempts'] = array_filter($_SESSION['admin_login_attempts'], function($t) use ($lockoutTime) { return $t > time() - $lockoutTime; });
     
+    // Clean expired attempts
+    $_SESSION['admin_login_attempts'] = array_filter($_SESSION['admin_login_attempts'], function($timestamp) use ($lockoutTime) {
+        return ($timestamp + $lockoutTime) > time();
+    });
+
     if (count($_SESSION['admin_login_attempts']) >= $maxAttempts) {
-        $waitMinutes = ceil($lockoutTime / 60);
-        $error = "Too many failed attempts. Please wait {$waitMinutes} minutes.";
+        $oldestAttempt = min($_SESSION['admin_login_attempts']);
+        $remainingTime = ($oldestAttempt + $lockoutTime) - time();
+        $waitMinutes = ceil($remainingTime / 60);
+        $error = "Too many failed attempts. Please wait {$waitMinutes} minute(s).";
     } else {
         $username = trim($_POST['username'] ?? '');
         $password = $_POST['password'] ?? '';

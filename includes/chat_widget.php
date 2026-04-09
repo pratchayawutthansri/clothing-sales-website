@@ -223,7 +223,7 @@ async function fetchMessages() {
     if (!isChatOpen) return;
     
     try {
-        const res = await fetch('/Xivex/api/chat.php?action=fetch');
+        const res = await fetch('/Xivex/api/chat.php?action=fetch&t=' + Date.now());
         const data = await res.json();
         
         if (data.status === 'success') {

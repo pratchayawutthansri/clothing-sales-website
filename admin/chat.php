@@ -4,7 +4,16 @@ checkAdminAuth();
 require_once '../includes/db.php'; // Main DB
 
 // Fetch active sessions (users who messaged) for initial load
-$stmt = $pdo->query("SELECT session_id, MAX(created_at) as last_msg, COUNT(*) as msg_count FROM chat_messages GROUP BY session_id ORDER BY last_msg DESC");
+$stmt = $pdo->query("
+    SELECT 
+        c1.session_id, 
+        MAX(c1.created_at) as last_msg, 
+        COUNT(*) as msg_count,
+        (SELECT is_admin FROM chat_messages c2 WHERE c2.session_id = c1.session_id ORDER BY created_at DESC LIMIT 1) as last_is_admin
+    FROM chat_messages c1 
+    GROUP BY c1.session_id 
+    ORDER BY last_is_admin ASC, last_msg DESC
+");
 $sessions = $stmt->fetchAll();
 
 $currentSession = $_GET['session'] ?? ($sessions[0]['session_id'] ?? null);
@@ -137,7 +146,9 @@ $currentSession = $_GET['session'] ?? ($sessions[0]['session_id'] ?? null);
                     </div>
                     <div class="session-meta">
                         <span>Customer Support</span>
-                        <span class="msg-badge"><?= (int)$s['msg_count'] ?></span>
+                        <?php if ((int)$s['last_is_admin'] === 0): ?>
+                            <span class="msg-badge"><?= (int)$s['msg_count'] ?></span>
+                        <?php endif; ?>
                     </div>
                 </a>
             <?php endforeach; ?>
@@ -184,7 +195,7 @@ $currentSession = $_GET['session'] ?? ($sessions[0]['session_id'] ?? null);
 
     async function fetchSidebarSessions() {
         try {
-            const res = await fetch('chat_api.php?action=get_sessions');
+            const res = await fetch('chat_api.php?action=get_sessions&t=' + Date.now());
             const data = await res.json();
             
             if (data.status === 'success' && data.sessions) {
@@ -210,7 +221,7 @@ $currentSession = $_GET['session'] ?? ($sessions[0]['session_id'] ?? null);
                         </div>
                         <div class="session-meta">
                             <span>Customer Support</span>
-                            <span class="msg-badge">${s.msg_count}</span>
+                            ${s.last_is_admin == 0 ? `<span class="msg-badge">${s.msg_count}</span>` : ''}
                         </div>
                     `;
                     sessionList.appendChild(link);
@@ -249,7 +260,7 @@ $currentSession = $_GET['session'] ?? ($sessions[0]['session_id'] ?? null);
 
     async function fetchAdminMessages() {
         try {
-            const res = await fetch(`chat_api.php?session=${currentSession}`);
+            const res = await fetch(`chat_api.php?session=${currentSession}&t=${Date.now()}`);
             const data = await res.json();
             
             if (data.status === 'success' && data.messages) {

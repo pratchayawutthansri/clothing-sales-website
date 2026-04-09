@@ -37,10 +37,12 @@ try {
         $productId = (int)($parts[0] ?? 0);
         $variantId = (int)($parts[1] ?? 0);
         if ($productId <= 0) continue;
+        if ($variantId <= 0) {
+            throw new Exception("Invalid product configuration detected in cart.");
+        }
 
-        if ($variantId > 0) {
-            // Product WITH variant — fetch details with row lock
-            $stmt = $pdo->prepare("SELECT p.name, v.price, v.size, v.stock FROM products p JOIN product_variants v ON p.id = v.product_id WHERE p.id = ? AND v.id = ? FOR UPDATE");
+        // Product WITH variant — fetch details with row lock
+            $stmt = $pdo->prepare("SELECT p.name, v.price, v.size, v.stock FROM products p JOIN product_variants v ON p.id = v.product_id WHERE p.id = ? AND v.id = ?");
             $stmt->execute([$productId, $variantId]);
             $item = $stmt->fetch();
 
@@ -72,29 +74,7 @@ try {
                     'subtotal' => $subtotal
                 ];
             }
-        } else {
-            // Product WITHOUT variant — use base_price
-            $stmt = $pdo->prepare("SELECT name, base_price FROM products WHERE id = ? FOR UPDATE");
-            $stmt->execute([$productId]);
-            $item = $stmt->fetch();
-
-            if ($item) {
-                $subtotal = $item['base_price'] * $qty;
-                $total_price += $subtotal;
-
-                $order_items[] = [
-                    'product_id' => $productId,
-                    'variant_id' => 0,
-                    'product_name' => $item['name'],
-                    'size' => '-',
-                    'price' => $item['base_price'],
-                    'quantity' => $qty,
-                    'subtotal' => $subtotal
-                ];
-            }
         }
-    }
-
     // Guard: Prevent empty orders (Critical Bug #2 fix)
     if (empty($order_items)) {
         throw new Exception("No valid items in cart. Products may have been removed.");

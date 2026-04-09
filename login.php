@@ -39,9 +39,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 
                 // Redirect user
                 if ($user['role'] === 'admin') {
-                    $_SESSION['is_admin'] = true;
-                    $_SESSION['admin_id'] = $user['id'];
-                    redirect('admin/index.php');
+                    // Redirect to Admin Login to require the 2nd step authentication
+                    redirect('admin/login.php');
                 } else {
                     // Check if they came from checkout
                     $redirect_to = isset($_GET['redirect']) && $_GET['redirect'] === 'checkout' ? 'checkout.php' : 'index.php';

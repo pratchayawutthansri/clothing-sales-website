@@ -19,16 +19,13 @@ foreach ($_SESSION['cart'] as $key => $quantity) {
     
     if ($productId > 0 && $variantId > 0) {
         $cartParsed[$key] = ['pid' => $productId, 'vid' => $variantId, 'qty' => $quantity];
-    } elseif ($productId > 0 && $variantId === 0) {
-        $cartParsed[$key] = ['pid' => $productId, 'vid' => 0, 'qty' => $quantity];
     } else {
-        unset($_SESSION['cart'][$key]);
+        unset($_SESSION['cart'][$key]); // Strictly remove invalid cart contents
     }
 }
 
 if (!empty($cartParsed)) {
     $withVariants = array_filter($cartParsed, function($c) { return $c['vid'] > 0; });
-    $withoutVariants = array_filter($cartParsed, function($c) { return $c['vid'] === 0; });
 
     if (!empty($withVariants)) {
         $variantIds = array_column($withVariants, 'vid');
@@ -64,34 +61,6 @@ if (!empty($cartParsed)) {
         }
     }
 
-    if (!empty($withoutVariants)) {
-        $productIds = array_column($withoutVariants, 'pid');
-        $placeholders = implode(',', array_fill(0, count($productIds), '?'));
-
-        $stmt = $pdo->prepare("SELECT id, name, base_price FROM products WHERE id IN ($placeholders)");
-        $stmt->execute($productIds);
-        $results = $stmt->fetchAll();
-
-        $productMap = [];
-        foreach ($results as $row) {
-            $productMap[$row['id']] = $row;
-        }
-
-        foreach ($withoutVariants as $key => $cartData) {
-            if (isset($productMap[$cartData['pid']])) {
-                $row = $productMap[$cartData['pid']];
-                $subtotal = $row['base_price'] * $cartData['qty'];
-                $total += $subtotal;
-                $cartItems[] = [
-                    'name' => $row['name'],
-                    'size' => '-',
-                    'price' => $row['base_price'],
-                    'qty' => $cartData['qty'],
-                    'subtotal' => $subtotal
-                ];
-            }
-        }
-    }
 }
 
 // Fetch Shop Settings

@@ -1,15 +1,15 @@
 /* Xivex - Modern Minimalist Streetwear */
 
 :root {
-    /* Brand Colors - High-End Streetwear */
-    --primary-color: #ffffff; /* White buttons on dark bg */
-    --secondary-color: #1a1a1a; 
-    --accent-color: #ff2a2a; 
-    --text-color: #fdfdfd;
+    /* Brand Colors - Urban Minimalist */
+    --primary-color: #1a1a1a;
+    --secondary-color: #f4f1ea; /* Warm Beige */
+    --accent-color: #9c9c9c;
+    --text-color: #000000;
     --white: #ffffff;
     --font-heading: 'Outfit', sans-serif;
-    --font-body: 'Kanit', 'Outfit', sans-serif;
-    --font-mono: 'Outfit', monospace;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'Space Mono', monospace;
     --primary-street: #0a0a0a;
     --accent-gold: #c9a84c;
     --off-white: #f0f0f0;
@@ -146,7 +146,7 @@ html {
 
 body {
     font-family: var(--font-body);
-    background-color: var(--bg-primary);
+    background-color: var(--white);
     color: var(--text-color);
     line-height: 1.6;
     overflow-x: hidden;
@@ -229,7 +229,7 @@ h4 {
     display: inline-block;
     padding: 14px 32px;
     background-color: var(--primary-color);
-    color: #000000;
+    color: #ffffff;
     text-transform: uppercase;
     font-size: 0.9rem;
     font-weight: 700;
@@ -241,10 +241,10 @@ h4 {
 }
 
 .btn:hover {
-    background-color: #cccccc;
-    border-color: #cccccc;
+    background-color: #333333;
+    border-color: #333333;
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .btn-outline {
@@ -275,7 +275,7 @@ h4 {
 }
 
 .btn-outline:hover {
-    color: #000000;
+    color: #ffffff;
     padding-right: 45px;
     /* Slight expansion effect */
 }
@@ -304,9 +304,10 @@ header {
     position: sticky;
     top: 0;
     z-index: 1000;
-    background-color: rgba(5, 5, 5, 0.6);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+    background-color: rgba(255, 255, 255, 0.95);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
     transition: all 0.4s ease;
 }
 
@@ -331,7 +332,7 @@ header .container {
     font-weight: 800;
     letter-spacing: -0.05em;
     z-index: 1100;
-    color: #ffffff;
+    color: #000000;
 }
 
 .nav-menu {
@@ -344,11 +345,11 @@ header .container {
     text-transform: uppercase;
     font-weight: 500;
     position: relative;
-    color: #bbbbbb;
+    color: #333333;
     transition: color 0.3s ease;
 }
 .nav-link:hover {
-    color: #ffffff;
+    color: #000000;
 }
 
 .nav-link::after {
@@ -358,7 +359,7 @@ header .container {
     left: 0;
     width: 0%;
     height: 1px;
-    background-color: #ffffff;
+    background-color: #000000;
     transition: var(--transition);
 }
 
@@ -370,11 +371,11 @@ header .container {
 .cart-icon {
     position: relative;
     font-weight: 500;
-    color: #bbbbbb;
+    color: #333333;
     transition: color 0.3s ease;
 }
 .cart-icon:hover {
-    color: #ffffff;
+    color: #000000;
 }
 
 .cart-count {
@@ -408,7 +409,7 @@ header .container {
 .bar {
     width: 25px;
     height: 3px;
-    background-color: #ffffff;
+    background-color: #000000;
     transition: all 0.3s ease;
     border-radius: 2px;
 }
@@ -443,7 +444,6 @@ header .container {
     width: 200%;
     height: 200%;
     background: radial-gradient(circle, rgba(255, 255, 255, 0.02) 0%, transparent 70%);
-    animation: float 20s ease-in-out infinite;
 }
 
 .hero-image {
@@ -483,7 +483,7 @@ header .container {
 
 .hero p {
     font-size: 1.1rem;
-    color: #444;
+    color: #000000;
     font-weight: 500;
     margin-bottom: 40px;
     max-width: 450px;
@@ -1046,17 +1046,6 @@ footer {
     }
 }
 
-@keyframes float {
-    0%, 100% {
-        transform: translate(0, 0) rotate(0deg);
-    }
-    33% {
-        transform: translate(30px, -30px) rotate(120deg);
-    }
-    66% {
-        transform: translate(-20px, 20px) rotate(240deg);
-    }
-}
 
 @keyframes glow {
     0%, 100% {

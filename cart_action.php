@@ -24,35 +24,17 @@ if ($action === 'add') {
     if ($quantity > 100) $quantity = 100; // Cap max quantity
     if ($quantity < 1) $quantity = 1;
 
-    if ($product_id > 0) {
-        $maxStock = 100; // Default max if no variant handles stock
-
-        if ($variant_id > 0) {
-            // Product WITH variant — verify variant belongs to product AND check stock
-            $stmtCheck = $pdo->prepare("SELECT id, stock FROM product_variants WHERE id = ? AND product_id = ?");
-            $stmtCheck->execute([$variant_id, $product_id]);
-            $vData = $stmtCheck->fetch();
-            if (!$vData) {
-                redirect('shop.php'); // Invalid variant-product pair
-            }
-            $maxStock = (int)$vData['stock'];
-        } else {
-            // GUARD: Prevent "Variant Bypass" (Business Logic Vulnerability)
-            $stmtRequireVariant = $pdo->prepare("SELECT id FROM product_variants WHERE product_id = ? LIMIT 1");
-            $stmtRequireVariant->execute([$product_id]);
-            if ($stmtRequireVariant->fetch()) {
-                redirect('shop.php'); 
-            }
-
-            // Product WITHOUT variant (variant_id=0) — verify product exists
-            $stmtCheck = $pdo->prepare("SELECT id FROM products WHERE id = ? AND is_visible = 1");
-            $stmtCheck->execute([$product_id]);
-            if (!$stmtCheck->fetch()) {
-                redirect('shop.php'); // Invalid product
-            }
+    if ($product_id > 0 && $variant_id > 0) {
+        // Product AND Variant must exist — verify variant belongs to product AND check stock
+        $stmtCheck = $pdo->prepare("SELECT id, stock FROM product_variants WHERE id = ? AND product_id = ?");
+        $stmtCheck->execute([$variant_id, $product_id]);
+        $vData = $stmtCheck->fetch();
+        if (!$vData) {
+            redirect('shop.php'); // Invalid variant-product pair
         }
+        $maxStock = (int)$vData['stock'];
 
-        $cartKey = $product_id . '_' . $variant_id; // Key: ProductID_VariantID (0 = no variant)
+        $cartKey = $product_id . '_' . $variant_id; // Key: ProductID_VariantID
 
         // Calculate requested total quantity
         $currentQty = isset($_SESSION['cart'][$cartKey]) ? $_SESSION['cart'][$cartKey] : 0;
@@ -93,15 +75,18 @@ if ($action === 'add') {
     $parts = explode('_', $cartKey);
     $productId = (int)$parts[0];
     $variantId = isset($parts[1]) ? (int)$parts[1] : 0;
-    $maxStock = 100;
     
-    if ($variantId > 0) {
-        $stmtCheck = $pdo->prepare("SELECT stock FROM product_variants WHERE id = ?");
-        $stmtCheck->execute([$variantId]);
-        $vStock = $stmtCheck->fetchColumn();
-        if ($vStock !== false) $maxStock = (int)$vStock;
+    // Strict variant check
+    if ($variantId <= 0) {
+        unset($_SESSION['cart'][$cartKey]);
+        redirect('cart.php');
     }
-
+    
+    $maxStock = 0;
+    $stmtCheck = $pdo->prepare("SELECT stock FROM product_variants WHERE id = ?");
+    $stmtCheck->execute([$variantId]);
+    $vStock = $stmtCheck->fetchColumn();
+    if ($vStock !== false) $maxStock = (int)$vStock;
     if ($quantity > $maxStock) {
         $quantity = $maxStock;
         $_SESSION['cart_error'] = "You can only update up to {$maxStock} items.";
