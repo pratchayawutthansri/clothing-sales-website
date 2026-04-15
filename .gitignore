@@ -15,6 +15,16 @@ admin/setup_chat_db.php
 admin/fix_chat_table.php
 admin/fix_db.php
 admin/create_chat_table_final.php
+test_users.php
+change_password.php
+fix_images.php
+fix_images.sql
+setup_sqlite.php
+database.sqlite
+admin/fix_roles.php
+admin/update_db_slips.php
+admin/upgrade_db_fk.php
+admin/upgrade_db_v2.php
 
 # Uploaded files (user-generated content)
 uploads/slips/*

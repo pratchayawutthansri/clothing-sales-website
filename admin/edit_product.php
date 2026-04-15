@@ -3,7 +3,7 @@ require_once 'includes/config.php';
 checkAdminAuth();
 require_once '../includes/db.php';
 
-$id = $_GET['id'] ?? 0;
+$id = (int)($_GET['id'] ?? 0);
 if (!$id) {
     header("Location: products.php");
     exit;
@@ -19,7 +19,7 @@ if (!$product) {
 }
 
 // Fetch Variants
-$stmtV = $pdo->prepare("SELECT * FROM product_variants WHERE product_id = ?");
+$stmtV = $pdo->prepare("SELECT * FROM product_variants WHERE product_id = ? ORDER BY id ASC");
 $stmtV->execute([$id]);
 $variants = $stmtV->fetchAll();
 ?>
@@ -135,21 +135,21 @@ $variants = $stmtV->fetchAll();
         </a>
     </div>
     
-    <?php if (isset($_GET['error'])): ?>
+    <?php if (!empty($_GET['error']) && is_string($_GET['error'])): ?>
     <div style="background: #fee2e2; border: 1px solid #fecaca; color: #ef4444; padding: 16px; border-radius: 8px; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; font-weight: 500;">
         <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         <?= htmlspecialchars($_GET['error']) ?>
     </div>
     <?php endif; ?>
     
-    <?php if (isset($_GET['success'])): ?>
+    <?php if (!empty($_GET['success']) && is_string($_GET['success'])): ?>
     <div style="background: #d1fae5; border: 1px solid #a7f3d0; color: #059669; padding: 16px; border-radius: 8px; margin-bottom: 24px; display: flex; align-items: center; gap: 10px; font-weight: 500;">
         <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
         <?= htmlspecialchars($_GET['success']) ?>
     </div>
     <?php endif; ?>
     
-    <form action="update_product_logic.php" method="POST" enctype="multipart/form-data">
+    <form action="update_product_logic.php" method="POST" enctype="multipart/form-data" onsubmit="return checkDuplicateSizes()">
         <input type="hidden" name="csrf_token" value="<?= $_SESSION['admin_csrf_token'] ?? '' ?>">
         <input type="hidden" name="id" value="<?= $product['id'] ?>">
         
@@ -167,11 +167,24 @@ $variants = $stmtV->fetchAll();
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                         <div class="form-group">
                             <label><?= __('aap_category') ?></label>
+                            <?php
+                                $preset_categories = ['Tops', 'Bottoms', 'Outerwear', 'Accessories'];
+                                $current_category = $product['category'] ?? '';
+                                $found_category = false;
+                                foreach ($preset_categories as $cat) {
+                                    if (strcasecmp($current_category, $cat) === 0) {
+                                        $found_category = true;
+                                        break;
+                                    }
+                                }
+                                if (!$found_category && $current_category !== '') {
+                                    $preset_categories[] = $current_category;
+                                }
+                            ?>
                             <select name="category" class="modern-select">
-                                <option value="Tops" <?= $product['category'] == 'Tops' ? 'selected' : '' ?>>Tops</option>
-                                <option value="Bottoms" <?= $product['category'] == 'Bottoms' ? 'selected' : '' ?>>Bottoms</option>
-                                <option value="Outerwear" <?= $product['category'] == 'Outerwear' ? 'selected' : '' ?>>Outerwear</option>
-                                <option value="Accessories" <?= $product['category'] == 'Accessories' ? 'selected' : '' ?>>Accessories</option>
+                                <?php foreach ($preset_categories as $cat): ?>
+                                    <option value="<?= htmlspecialchars($cat) ?>" <?= strcasecmp($current_category, $cat) === 0 ? 'selected' : '' ?>><?= htmlspecialchars($cat) ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                         <div class="form-group">
@@ -182,7 +195,7 @@ $variants = $stmtV->fetchAll();
 
                     <div class="form-group">
                         <label><?= __('aap_desc') ?></label>
-                        <textarea name="description" required class="modern-textarea"><?= htmlspecialchars($product['description']) ?></textarea>
+                        <textarea name="description" required class="modern-textarea"><?= htmlspecialchars($product['description'] ?? '') ?></textarea>
                     </div>
                 </div>
 
@@ -274,12 +287,33 @@ $variants = $stmtV->fetchAll();
 <script>
 document.getElementById('imgInp').onchange = function() {
     const fileNameDisplay = document.getElementById('fileName');
-    if (this.files && this.files[0]) {
+    if (this.files && this.files.length > 0) {
         fileNameDisplay.textContent = 'เตรียมอัปโหลด: ' + this.files[0].name;
         fileNameDisplay.style.color = '#059669';
         fileNameDisplay.style.fontWeight = 'bold';
+    } else {
+        fileNameDisplay.textContent = 'คลิกเพื่ออัปโหลดรูปใหม่ (เฉพาะภาพใหม่)';
+        fileNameDisplay.style.color = 'inherit';
+        fileNameDisplay.style.fontWeight = 'normal';
     }
 };
+
+function checkDuplicateSizes() {
+    const sizeInputs = document.querySelectorAll('input[name="existing_sizes[]"], input[name="new_sizes[]"]');
+    const sizes = [];
+    for (let input of sizeInputs) {
+        const val = input.value.trim().toUpperCase();
+        if (val) {
+            if (sizes.includes(val)) {
+                alert('ไม่สามารถบันทึกได้! เนื่องจากคุณมีตัวเลือกไซส์ "' + val + '" ซ้ำซ้อนกันอยู่ กรุณาตรวจสอบให้แน่ใจว่าแต่ละไซส์มีเพียงตัวเลือกเดียวครับ');
+                input.focus();
+                return false;
+            }
+            sizes.push(val);
+        }
+    }
+    return true;
+}
 
 function addVariant() {
     const container = document.getElementById('new-variants-container');

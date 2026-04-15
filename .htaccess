@@ -10,6 +10,6 @@
 </IfModule>
 
 # Block access to SQL files
-<FilesMatch "\.(sql|log)$">
+<FilesMatch "\.(sql|log|sqlite)$">
     Require all denied
 </FilesMatch>

@@ -94,7 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         $pdo->commit();
-        header("Location: index.php?success=1");
+        header("Location: products.php?success=1");
         exit;
 
     } catch (Exception $e) {

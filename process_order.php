@@ -17,6 +17,12 @@ $phone = trim($_POST['phone']);
 $address = trim($_POST['address']);
 $payment_method = $_POST['payment_method'];
 
+// Whitelist valid payment methods
+$valid_methods = ['BANK_TRANSFER', 'COD'];
+if (!in_array($payment_method, $valid_methods)) {
+    die("Invalid payment method.");
+}
+
 if (empty($name) || empty($email) || empty($phone) || empty($address)) {
     die("Please fill in all required fields.");
 }
@@ -42,7 +48,7 @@ try {
         }
 
         // Product WITH variant — fetch details with row lock
-            $stmt = $pdo->prepare("SELECT p.name, v.price, v.size, v.stock FROM products p JOIN product_variants v ON p.id = v.product_id WHERE p.id = ? AND v.id = ?");
+            $stmt = $pdo->prepare("SELECT p.name, v.price, v.size, v.stock FROM products p JOIN product_variants v ON p.id = v.product_id WHERE p.id = ? AND v.id = ? FOR UPDATE");
             $stmt->execute([$productId, $variantId]);
             $item = $stmt->fetch();
 

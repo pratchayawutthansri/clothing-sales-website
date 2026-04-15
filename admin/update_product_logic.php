@@ -71,6 +71,8 @@ try {
             $sqlUpdateImg = "UPDATE products SET image = ? WHERE id = ?";
             $stmtUpdateImg = $pdo->prepare($sqlUpdateImg);
             $stmtUpdateImg->execute([$dbPath, $id]);
+        } else {
+            throw new Exception("เกิดข้อผิดพลาด: ไม่สามารถบันทึกไฟล์ภาพในระบบได้ (Permission/Disk Error)");
         }
     }
 
@@ -123,7 +125,9 @@ try {
             if (!empty($newSizes[$i])) {
                 $vPrice = (float)($newPrices[$i] ?? 0);
                 $vStock = max(0, (int)($newStocks[$i] ?? 0));
-                if ($vPrice <= 0) continue;
+                if ($vPrice <= 0) {
+                    throw new Exception("ราคาของ Variant ไซส์ '{$newSizes[$i]}' ห้ามน้อยกว่าหรือเท่ากับ 0");
+                }
                 
                 $stmtInsertVar->execute([
                     $id,
@@ -146,7 +150,9 @@ try {
     exit;
 
 } catch (Exception $e) {
-    $pdo->rollBack();
+    if ($pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
     header("Location: edit_product.php?id=$id&error=" . urlencode($e->getMessage()));
     exit;
 }

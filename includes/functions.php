@@ -7,11 +7,9 @@ function generateCsrfToken() {
     return $_SESSION['csrf_token'];
 }
 
-// Function to verify CSRF Token (rotates after use)
+// Function to verify CSRF Token
 function verifyCsrfToken($token) {
     if (isset($_SESSION['csrf_token']) && hash_equals($_SESSION['csrf_token'], $token)) {
-        // Rotate token after successful verification
-        unset($_SESSION['csrf_token']);
         return true;
     }
     return false;
